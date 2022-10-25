@@ -1,5 +1,7 @@
 import { todos } from 'data/Todos'
-import React, { FC } from 'react'
+import { useAppDispatch, useAppSelector } from 'hooks/redux'
+import React, { FC, useEffect } from 'react'
+import { addTodo } from 'store/slices/todosSlices'
 import TodoList from './TodoList'
 
 const Todo: FC = () => {
