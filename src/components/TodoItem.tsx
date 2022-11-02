@@ -1,5 +1,7 @@
+import { useAppDispatch } from 'hooks/redux'
 import { ITodo } from 'models/ITodo'
 import React, { FC, useState } from 'react'
+import { setModal } from 'store/slices/modalSlices'
 
 interface TodoItemProps extends ITodo {}
 
@@ -11,9 +13,20 @@ const TodoItem: FC<TodoItemProps> = ({
 	completedAt,
 	createdAt,
 }) => {
+	const dispatch = useAppDispatch()
 	const [isShowDetails, setIsShowDetails] = useState<boolean>(false)
 
 	const toggleShowDetails = () => setIsShowDetails(!isShowDetails)
+	const onClickEditButton = () =>
+		dispatch(
+			setModal({
+				buttonTitle: 'Редактировать',
+				modalTitle: 'Редактирование задачи',
+				description,
+				title,
+				isVisible: true,
+			})
+		)
 
 	return (
 		<div className="shadow shadow-slate-500 p-6 rounded-2xl">
@@ -77,7 +90,10 @@ const TodoItem: FC<TodoItemProps> = ({
 								<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
 							</svg>
 						</button>
-						<button className="bg-blue-500 cursor-pointer py-2 px-4 rounded-2xl text-white max-sm:w-full flex justify-center items-center hover:bg-blue-600 transition">
+						<button
+							className="bg-blue-500 cursor-pointer py-2 px-4 rounded-2xl text-white max-sm:w-full flex justify-center items-center hover:bg-blue-600 transition"
+							onClick={onClickEditButton}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="32"

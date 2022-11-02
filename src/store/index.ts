@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import todosSlices from './slices/todosSlices'
+import modalSlices from './slices/modalSlices'
 
 const rootReducer = combineReducers({
 	todosSlices,
+	modalSlices,
 })
 
 export const setupStore = () => {

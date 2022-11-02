@@ -8,7 +8,7 @@ type TodoListProps = {
 
 const TodoList: FC<TodoListProps> = ({ todos }) => {
 	return (
-		<div className="max-2xl:w-1/2 max-lg:w-full mx-auto flex flex-col gap-5">
+		<div className="xl:w-1/2 w-full mx-auto flex flex-col gap-5">
 			{todos.map(todo => (
 				<TodoItem key={todo._id} {...todo} />
 			))}
