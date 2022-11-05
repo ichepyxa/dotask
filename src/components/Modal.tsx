@@ -1,25 +1,58 @@
 import { useAppDispatch, useAppSelector } from 'hooks/redux'
-import React, { FC, FormEvent, useState } from 'react'
+import React, { FC, FormEvent, useEffect, useState } from 'react'
 import { setModalIsVisible } from 'store/slices/modalSlices'
+import { addTodo, changeTodo } from 'store/slices/todosSlices'
 import Modallnput from './Modallnput'
 
 const Modal: FC = () => {
 	const dispatch = useAppDispatch()
-	const { title, modalTitle, description, buttonTitle } = useAppSelector(
+	const { todo, modalTitle, buttonTitle, actionOnClick } = useAppSelector(
 		state => state.modalSlices.modal
 	)
-	const [inputTitle, setInputTitle] = useState<string>(title)
-	const [inputDescription, setInputDescription] = useState<string>(description)
+	const [inputTitle, setInputTitle] = useState<string>(todo.title)
+	const [inputDescription, setInputDescription] = useState<string>(
+		todo.description
+	)
+	const [isValidInputTitle, setIsValidInputTitle] = useState<boolean | null>(
+		true
+	)
 
 	const onClick = (e: FormEvent<HTMLButtonElement>) => {
 		e.preventDefault()
 
-		// if (inputTitle)
+		if (isValidInputTitle) {
+			if (actionOnClick === 'add') {
+				dispatch(
+					addTodo({
+						...todo,
+						title: inputTitle,
+						description: inputDescription,
+					})
+				)
+			}
+
+			if (actionOnClick === 'edit') {
+				dispatch(
+					changeTodo({
+						...todo,
+						title: inputTitle,
+						description: inputDescription,
+					})
+				)
+			}
+
+			closeModal()
+		}
 	}
 
-	const closeModal = () => {
-		dispatch(setModalIsVisible(false))
-	}
+	useEffect(() => {
+		if (inputTitle.length < 3) {
+			return setIsValidInputTitle(false)
+		}
+		setIsValidInputTitle(true)
+	}, [inputTitle])
+
+	const closeModal = () => dispatch(setModalIsVisible(false))
 
 	return (
 		<>
@@ -27,7 +60,9 @@ const Modal: FC = () => {
 				className="bg-slate-600/50 fixed inset-0 z-40"
 				onClick={closeModal}
 			></div>
-			<form className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white sm:max-w-md w-11/12 sm:w-full rounded-lg z-50 px-6 py-10">
+			<form
+				className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white sm:max-w-md w-11/12 sm:w-full rounded-lg z-50 px-6 py-10 animate-fadeIn transition-all`}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					className="text-slate-500 cursor-pointer hover:text-slate-800 transition absolute top-3 right-3"
@@ -48,15 +83,17 @@ const Modal: FC = () => {
 				</h2>
 				<Modallnput
 					labelText="Название"
-					inputName="name"
+					inputName="title"
 					inputValue={inputTitle}
 					inputValueOnChange={setInputTitle}
+					classNameForInput={isValidInputTitle ? '' : 'border-red-500'}
 				/>
 				<Modallnput
 					labelText="Описание"
 					inputName="description"
 					inputValue={inputDescription}
 					inputValueOnChange={setInputDescription}
+					isTextArea={true}
 				/>
 				<button
 					type="submit"

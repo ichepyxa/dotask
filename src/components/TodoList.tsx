@@ -9,9 +9,11 @@ type TodoListProps = {
 const TodoList: FC<TodoListProps> = ({ todos }) => {
 	return (
 		<div className="xl:w-1/2 w-full mx-auto flex flex-col gap-5">
-			{todos.map(todo => (
-				<TodoItem key={todo._id} {...todo} />
-			))}
+			{todos && todos.length > 0 ? (
+				todos.map((todo, index) => <TodoItem key={index} {...todo} />)
+			) : (
+				<h2 className="text-3xl text-center text-white">У вас нету задач</h2>
+			)}
 		</div>
 	)
 }

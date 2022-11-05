@@ -1,7 +1,9 @@
+import { ITodo } from './ITodo'
+
 export interface IModal {
 	isVisible: boolean
 	modalTitle: string
 	buttonTitle: string
-	title: string
-	description: string
+	todo: ITodo
+	actionOnClick: string
 }

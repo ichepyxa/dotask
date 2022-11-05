@@ -2,6 +2,7 @@ import { useAppDispatch } from 'hooks/redux'
 import { ITodo } from 'models/ITodo'
 import React, { FC, useState } from 'react'
 import { setModal } from 'store/slices/modalSlices'
+import { removeTodo } from 'store/slices/todosSlices'
 
 interface TodoItemProps extends ITodo {}
 
@@ -17,19 +18,28 @@ const TodoItem: FC<TodoItemProps> = ({
 	const [isShowDetails, setIsShowDetails] = useState<boolean>(false)
 
 	const toggleShowDetails = () => setIsShowDetails(!isShowDetails)
-	const onClickEditButton = () =>
+	const onClickDeleteButton = () => dispatch(removeTodo(_id))
+	const onClickEditButton = () => {
 		dispatch(
 			setModal({
 				buttonTitle: 'Редактировать',
 				modalTitle: 'Редактирование задачи',
-				description,
-				title,
+				todo: {
+					_id,
+					title,
+					description,
+					completedAt,
+					createdAt,
+					image,
+				},
 				isVisible: true,
+				actionOnClick: 'edit',
 			})
 		)
+	}
 
 	return (
-		<div className="shadow shadow-slate-500 p-6 rounded-2xl">
+		<div className="shadow shadow-slate-500 p-6 rounded-2xl bg-white">
 			<div className="flex justify-between items-center">
 				<h2 className="text-slate-800 font-medium text-lg">
 					{title.length > 15 ? `${title.substring(0, 15)}...` : title}
@@ -70,9 +80,14 @@ const TodoItem: FC<TodoItemProps> = ({
 
 			{isShowDetails ? (
 				<div>
-					<div className="mt-3 text-md break-all">{description}</div>
+					<div className="mt-3 text-md break-all">
+						{description.length > 0 ? description : 'Описание отсутствует'}
+					</div>
 					<div className="mt-5 flex justify-end gap-3 items-center">
-						<button className="bg-red-500 cursor-pointer py-2 px-4 rounded-2xl text-white max-sm:w-full flex justify-center items-center hover:bg-red-600 transition">
+						<button
+							className="bg-red-500 cursor-pointer py-2 px-4 rounded-2xl text-white max-sm:w-full flex justify-center items-center hover:bg-red-600 transition"
+							onClick={onClickDeleteButton}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="32"
