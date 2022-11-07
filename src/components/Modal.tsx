@@ -14,11 +14,15 @@ const Modal: FC = () => {
 		todo.description
 	)
 	const [isValidInputTitle, setIsValidInputTitle] = useState<boolean | null>(
-		true
+		null
 	)
 
 	const onClick = (e: FormEvent<HTMLButtonElement>) => {
 		e.preventDefault()
+
+		if (inputTitle.length === 0) {
+			return setIsValidInputTitle(false)
+		}
 
 		if (isValidInputTitle) {
 			if (actionOnClick === 'add') {
@@ -46,9 +50,14 @@ const Modal: FC = () => {
 	}
 
 	useEffect(() => {
+		if (inputTitle.length === 0) {
+			return setIsValidInputTitle(null)
+		}
+
 		if (inputTitle.length < 3) {
 			return setIsValidInputTitle(false)
 		}
+
 		setIsValidInputTitle(true)
 	}, [inputTitle])
 
@@ -86,7 +95,13 @@ const Modal: FC = () => {
 					inputName="title"
 					inputValue={inputTitle}
 					inputValueOnChange={setInputTitle}
-					classNameForInput={isValidInputTitle ? '' : 'border-red-500'}
+					classNameForInput={
+						isValidInputTitle === null
+							? ''
+							: isValidInputTitle
+							? ''
+							: '!border-red-500'
+					}
 				/>
 				<Modallnput
 					labelText="Описание"

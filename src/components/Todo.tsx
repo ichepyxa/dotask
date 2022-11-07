@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'hooks/redux'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { setModal } from 'store/slices/modalSlices'
 import { setTodos } from 'store/slices/todosSlices'
 import TodoList from './TodoList'
@@ -7,11 +7,13 @@ import TodoList from './TodoList'
 const Todo: FC = () => {
 	const dispatch = useAppDispatch()
 	const todos = useAppSelector(state => state.todosSlices.todos)
+	const [isInitial, setIsInitial] = useState<boolean>(true)
 
 	useEffect(() => {
-		if (todos.length > 0) {
+		if (!isInitial) {
 			return localStorage.setItem('todos', JSON.stringify(todos))
 		}
+		setIsInitial(false)
 	}, [todos])
 
 	useEffect(() => {
@@ -29,6 +31,7 @@ const Todo: FC = () => {
 				todo: {
 					_id: todos.length + 1,
 					title: '',
+					isCompleted: false,
 					description: '',
 					completedAt: 0,
 					createdAt: new Date().getTime(),
