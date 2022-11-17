@@ -29,7 +29,7 @@ const Todo: FC = () => {
 				buttonTitle: 'Создать',
 				modalTitle: 'Создание задачи',
 				todo: {
-					_id: todos.length + 1,
+					_id: todos.length > 0 ? todos[todos.length - 1]._id + 1 : 1,
 					title: '',
 					isCompleted: false,
 					description: '',

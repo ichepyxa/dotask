@@ -13,12 +13,11 @@ function App() {
 	)
 
 	useEffect(() => {
-		setInterval(async () => {
-			await fetch('https://random.imagecdn.app/2000/2000').then(response => {
-				console.log('fs')
+		setInterval(() => {
+			fetch('https://random.imagecdn.app/2000/2000').then(response => {
 				setSrc(response.url)
 			})
-		}, 500000)
+		}, 5000000)
 	}, [])
 
 	return (
